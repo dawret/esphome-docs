@@ -20,9 +20,9 @@ nrf52:
 
 ## Configuration variables
 
-- **board** (*Required*, string): The board type. Valid options are `adafruit_feather_nrf52840`, `adafruit_itsybitsy_nrf52840`, `xiao_ble`. Other boards should work with those configuration as well.
-- **bootloader** (*Optional*, string): Bootloader type. Valid options are `mcuboot`, `adafruit`, `adafruit_nrf52_sd132`, `adafruit_nrf52_sd140_v6`, `adafruit_nrf52_sd140_v7`. Default value depends on board type.
-- **dcdc** (*Optional*, boolean): Enable DC/DC converter for REG1 stage. Defaults to `true`.
+- **board** (*Required*, string): The board type. Use the Zephyr build target here, for example `adafruit_feather_nrf52840`, `adafruit_itsybitsy_nrf52840` or `xiao_ble`. For details about supported boards refer to the [Zephyr documentation](https://docs.zephyrproject.org/3.7.0/boards/index.html#boards). All boards based on the nrf52840, nrf5340 and nrf54LXX families should be supported.
+- **bootloader** (*Optional*, string): Bootloader type. Valid options are `mcuboot`, `adafruit`, `nordic`, `adafruit_nrf52_sd132`, `adafruit_nrf52_sd140_v6`, `adafruit_nrf52_sd140_v7`. Default value depends on board type and will attemt to match the stock configuration of the board.
+- **dcdc** (*Optional*, boolean): Only on nrf52840. Enable DC/DC converter for REG1 stage. Defaults to `true`.
 External LC filters must be connected to the DC/DC regulator pins if it is being used.
 The advantage of using a DC/DC regulator is that the overall power consumption is normally reduced
 as the efficiency of such a regulator is higher than that of a LDO.
@@ -67,6 +67,20 @@ nrf52:
   board: adafruit_itsybitsy_nrf52840
 ```
 
+## Flashing with the Nordic Open Bootloader
+
+This bootloader supports updates over USB CDC.
+
+1. Connect the board to the PC via USB.
+1. Press the "reset" button
+1. Run `esphome upload yourfile.yaml`.
+
+```yaml
+# Example configuration entry
+nrf52:
+  board: nrf52840dongle
+```
+
 ## GPIO Pin Numbering
 
 There are two ways to reference GPIO pins:
@@ -102,7 +116,7 @@ nrf52:
 
 ## REGOUT0
 
-Output voltage from the REG0 regulator stage, which powers the GPIO pins when the board operates in high-voltage mode.
+Only on nrf52840. Output voltage from the REG0 regulator stage, which powers the GPIO pins when the board operates in high-voltage mode.
 This setting can only be changed a limited number of times, unless uicr_erase is set to true.
 Requires `mcuboot` or `adafruit` bootloader version 0.9.3 or higher.
 
